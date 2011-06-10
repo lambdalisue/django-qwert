@@ -49,8 +49,6 @@ class Userset(object):
             user = User.objects.create_user(username, email, password)
         user.is_staff = is_staff
         user.is_superuser = is_superuser
-        user.get_profile().nickname = username
-        user.get_profile().save()
         user.save()
         return user
     def __init__(self):

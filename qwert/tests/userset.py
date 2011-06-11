@@ -64,5 +64,5 @@ class Userset(object):
         return self.login(client, self.admin)
     def login_staff(self, client):
         return self.login(client, self.staff)
-    def login_guest(self, client):
+    def login_user(self, client):
         return self.login(client, self.user)

@@ -6,7 +6,7 @@
 #
 from setuptools import setup, find_packages
 
-version = "0.1rc1"
+version = "0.1rc2"
 
 def read(filename):
     import os.path
@@ -16,7 +16,7 @@ setup(
         name="django-qwert",
         version=version,
         description = "Django's useful snippets collection",
-        long_description=read('README.mkd'),
+        long_description=read('README.rst'),
         classifiers = [
             'Framework :: Django',
             'Intended Audience :: Developers',
@@ -32,6 +32,6 @@ setup(
         license = 'BSD',
         packages = find_packages(),
         include_package_data = True,
-        zip_safe = False,
-        install_requires=['setuptools'],
+        zip_safe = True,
+        install_requires=['setuptools', 'markdown', 'BeautifulSoup', 'Akismet'],
 )

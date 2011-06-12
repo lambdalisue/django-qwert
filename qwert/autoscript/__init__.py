@@ -14,7 +14,7 @@ from django.db.models import signals
 # Add some useful extra templatetags in builtin templatetags
 #----------------------------------------------------------------------------------------------------
 add_to_builtins('qwert.templatetags.expr')
-add_to_builtins('qwert.templatetags.smart_if')
+add_to_builtins('qwert.templatetags.elif')
 add_to_builtins('qwert.templatetags.truncateletters')
 add_to_builtins('qwert.templatetags.urlize_html')
 

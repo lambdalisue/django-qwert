@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 #
 # Author:    alisue
+# Modifier   giginet
 # Date:        2011/03/19
 #
 from django.conf import settings
+from django.db import models
 from django.template import add_to_builtins
 from django.contrib.auth import models as auth_models
 from django.contrib.auth.management import create_superuser
@@ -22,6 +24,7 @@ add_to_builtins('qwert.templatetags.urlize_html')
 # Automatically create test user at `syncdb`
 #----------------------------------------------------------------------------------------------------
 settings.AUTO_CREATE_USER = getattr(settings, 'AUTO_CREATE_USER', True)
+
 if settings.DEBUG and settings.AUTO_CREATE_USER:
     # From http://stackoverflow.com/questions/1466827/ --
     #
@@ -31,15 +34,22 @@ if settings.DEBUG and settings.AUTO_CREATE_USER:
     #
     # Create our own test user automatically.
     def create_testuser(app, created_models, verbosity, **kwargs):
-        USERNAME = 'admin'
-        PASSWORD = 'admin'
+        USERNAME = getattr(settings, 'QWERT_AUTO_CREATE_USERNAME', 'admin')
+        PASSWORD = getattr(settings, 'QWERT_AUTO_CREATE_PASSWORD', 'admin')
+        EMAIL    = getattr(settings, 'QWERT_AUTO_CREATE_EMAIL', 'x@x.com')
+
+        if getattr(settings, 'QWERT_AUTO_CREATE_USER', None):
+            User = models.get_model(*settings.QWERT_AUTO_CREATE_USER.rsplit('.', 1))
+        else:
+            from django.contrib.auth.models import User
+
         try:
-            auth_models.User.objects.get(username=USERNAME)
-        except auth_models.User.DoesNotExist:
+            User.objects.get(username=USERNAME)
+        except User.DoesNotExist:
             print '*' * 80
             print 'Creating test user -- login: %s, password: %s' % (USERNAME, PASSWORD)
             print '*' * 80
-            assert auth_models.User.objects.create_superuser(USERNAME, 'x@x.com', PASSWORD)
+            assert User.objects.create_superuser(USERNAME, EMAIL, PASSWORD)
         else:
             print 'Test user already exists. -- login: %s, password: %s' % (USERNAME, PASSWORD)
     signals.post_syncdb.disconnect(

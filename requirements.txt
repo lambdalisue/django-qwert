@@ -1,0 +1,9 @@
+# pip install requirements
+# use this file with the following command
+#
+#   pip install -r requirements.txt
+#
+distribute
+setuptools-git
+mock
+django>=1.3

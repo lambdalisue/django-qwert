@@ -1,0 +1,6 @@
+# pip install requirements for testing
+# use this file with the following command
+#
+#   pip install -r requirements-test.txt
+#
+PyYAML

@@ -1,10 +1,5 @@
-# -*- coding: utf-8 -*-
-#
-# Author:        alisue
-# Date:            2010/11/06
-#
+# vim: set fileencoding=utf-8 :
 # from snippets: http://djangosnippets.org/snippets/45/
-#
 from django import template
 from django.conf import settings
 

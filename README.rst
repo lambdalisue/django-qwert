@@ -1,63 +1,88 @@
-``django-qwert`` is django's snippets collection by Alisue
-each snippets' has different author so please checkout the link on the each file's comment.
-(some code is written by me or couldn't find source url)
+django-qwert is a trivia snippet collection of Django which used in 
+`Kawaz <http://www.kawaz.org>`_
 
 Install
-===========================================
+==============
 ::
 
-	sudo pip install django-qwert
-
-or::
-
-    sudo pip install git+git://github.com/lambdalisue/django-qwert.git#egg=django-qwert
-
+    pip install django-qwert
 
 Features
-==========================================
+================
 
-+	Http403 Exception
-	http://chronosbox.org/blog/manipulando-erros-http-403-permissao-negada-no-django?lang=en
-+	User based exception
-	http://djangosnippets.org/snippets/935/
-+	Thread local (global request)
-+	Automatically generate test user on syncdb when DEBUG=True
-    http://stackoverflow.com/questions/1466827/
-+	Protect comment post from spam using Akismet
-+	Useful templatetags
+1.  Http403 exception
 
-	+	smart_if
-	+	expr
-	+	evaluate_tag
-	+	get_archives
-	+	get_latest
-	+	get_links
-	+	markdown_tags
-	+	truncateletters
-	+	urlize_html
+    Like ``Http404`` exception. You can raise ``Http403`` exception and
+    ``HttpResponseForbidden`` will be responsed
 
-Required
-=========================================
-+	BeautifulSoup
-+	Akismet
-+	markdown
+2.  User based exception
+
+    Super user can see Django technical exception page even when
+    ``DEBUG=False``
+
+3.  Global request
+
+    Developpers can access ``request`` instance duaring request process
+    with thread local mechanisms
+
+4.  ``with_request`` decorator
+
+    To enable handling ``request`` instance in form, convert form class and 
+    classbased generic view class. It is useful to determine the author of
+    the object in method of form.
+
+5.  Useful templatetags and some extra builtin templatetags
+
+    +   expr (extra builtin)
+
+        calculate python expression in template
+
+    +   evaluate
+
+        evaluate django template in string
+
+    +   truncateletters (extra builtin)
+    
+        like ``truncatewords``, this truncate letters. Useful to use the
+        language which does not have space for delimiter (like Japanese,
+        Chinese ...etc)
+
+    +   markdown
+
+        enhanced markdown filter which can care about the markdown extensions.
+        ``markdown`` is required to use this templatetag.
+
+    +   urlize_html
+
+        ``urlize`` filter for HTML string. ``BeautifulSoup`` is required to
+        use this templatetag
+
+6.  Enhanced override_settings
+
+    Similar with Django 1.4 ``override_settings`` but it will recall
+    ``syncdb`` command when new app is appended to ``INSTALLED_APPS``.
+    And ``with_apps`` and ``without_apps`` decorator/context manager is 
+    added.
+
+7.  Automatically test user is created in ``syncdb`` command
 
 Settings
-=========================================
+================
 
-Automatically generate test user on syncdb when DEBUG=True
-----------------------------------------------------------
-``AUTO_CREATE_USER``
-	When it ``True`` then create test user (username: admin, password: admin) automatically when syncdb is running.
-	the default value is ``True``
+``AUTO_CREATE_TESTUSER``
+    To disable automatically creating test user in ``syncdb`` command, set
+    ``False`` to this setting. Default: ``True``
 
-Protect comment post from spam using Akismet
-----------------------------------------------------------
-``AKISMET_COMMENT_PROTECT``
-	When it ``True`` then protecting comment post by Akismet feature is enable. the default value is ``True``
+``TESTUSER_USERNAME``
+    An username of test user. Default: ``'admin'``
 
-``TYPEPAD_ANTISPAM_API_KEY``
-	When it is setted using Typepad antispam is used for protecting comment
+``TESTUSER_EMAIL``
+    An email address of test user. Default: ``"%s@test.com" %
+    TESTUSER_USERNAME``
 
-``AKISMET_API_KEY``
-	Required to set for enabling protecting feature.
+``TESTUSER_PASSWORD``
+    A password of test user. Default: ``'password'``
+
+``ENABLE_EXTRA_BUILTINS``
+    To disable adding extra templatetags to buitlin, set ``False``. 
+

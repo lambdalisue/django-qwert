@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8 :
 """
-Middleware to store request instance during request
+An extra models for using unittest
 
 
 AUTHOR:
@@ -29,32 +29,13 @@ License:
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
     IN THE SOFTWARE.
 
-"""
+"""   
 from __future__ import with_statement
-try:
-    from threading import local
-except ImportError:
-    from django.utils._threading_local import local
+from django.db import models
 
-__all__ = ['get_request', 'ThreadLocalsMiddleware']
-_thread_locals = local()
+class Article(models.Model):
+    title = models.CharField('title', max_length=200, default='No title')
+    body = models.TextField('body', blank=True, default='')
 
-def get_request():
-    """Return stored request instance in current thread"""
-    return getattr(_thread_locals, 'request', None)
-
-class ThreadLocalsMiddleware(object):
-    """
-    Middleware that store current request in thread local storage.
-    This middleware should come at the top of the MIDDLEWARE_CLASSES list.
-    
-    """
-    def process_request(self, request):
-        # save current request instance
-        _thread_locals.request = request
-
-    def process_response(self, request, response):
-        # remove saved request instance
-        if hasattr(_thread_locals, 'request'):
-            delattr(_thread_locals, 'request')
-        return response
+    def __unicode__(self):
+        return self.title

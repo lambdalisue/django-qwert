@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8 :
 """
-An extra models for using unittest
+Models for just testing
 
 
 AUTHOR:
@@ -29,13 +29,16 @@ License:
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
     IN THE SOFTWARE.
 
-"""   
+"""
 from __future__ import with_statement
 from django.db import models
 
 class Article(models.Model):
     title = models.CharField('title', max_length=200, default='No title')
     body = models.TextField('body', blank=True, default='')
+
+    class Meta:
+        app_label = 'qwert'
 
     def __unicode__(self):
         return self.title

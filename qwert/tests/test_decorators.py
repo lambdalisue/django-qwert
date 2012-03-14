@@ -36,14 +36,11 @@ from django.test import TestCase
 from django import forms
 from django.views import generic as views
 from qwert.decorators.with_request import with_request
-from qwert.tests.override_settings import with_apps
+from qwert.tests.models import Article
 
-
-@with_apps('qwert.tests.test_app')
 class QwertDecoratorsWithRequestTestCase(TestCase):
 
     def test_decorate_valid_form(self):
-        from qwert.tests.test_app.models import Article
         class ArticleForm(forms.ModelForm):
             class Meta:
                 model = Article
@@ -68,7 +65,6 @@ class QwertDecoratorsWithRequestTestCase(TestCase):
         self.assertRaises(AttributeError, with_request, NonModelForm)
 
     def test_decorate_valid_view(self):
-        from qwert.tests.test_app.models import Article
         class ArticleForm(forms.ModelForm):
             class Meta:
                 model = Article

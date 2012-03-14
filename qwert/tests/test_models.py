@@ -35,14 +35,12 @@ License:
 """   
 from __future__ import with_statement
 from django.test import TestCase
+from qwert.tests.models import Article
 
-from override_settings import with_apps
 
-@with_apps('qwert.tests.test_app')
 class ArticleTestCase(TestCase):
 
     def test_creation(self):
-        from test_app.models import Article
         new_article = Article.objects.create(title='foo', body='foo')
 
         self.assertEqual(new_article.title, 'foo')

@@ -1,7 +1,11 @@
+#!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 """
-Middleware to store request instance during request
+Run Django Test with Python setuptools test command
 
+
+REFERENCE:
+    http://gremu.net/blog/2010/enable-setuppy-test-your-django-apps/
 
 AUTHOR:
     lambdalisue[Ali su ae] (lambdalisue@hashnote.net)
@@ -29,32 +33,28 @@ License:
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
     IN THE SOFTWARE.
 
-"""
+"""   
 from __future__ import with_statement
-try:
-    from threading import local
-except ImportError:
-    from django.utils._threading_local import local
+import os, sys
+os.environ['DJANGO_SETTINGS_MODULE'] = 'miniblog.settings'
+pack_dir = os.path.dirname(__file__)
+test_dir = os.path.join(pack_dir, 'tests', 'src')
+sys.path.insert(0, pack_dir)
+sys.path.insert(0, test_dir)
 
-__all__ = ['get_request', 'ThreadLocalsMiddleware']
-_thread_locals = local()
+from django.test.utils import get_runner
+from django.conf import settings
 
-def get_request():
-    """Return stored request instance in current thread"""
-    return getattr(_thread_locals, 'request', None)
+def runtests(verbosity=1, interactive=True):
+    """Run Django Test"""
+    TestRunner = get_runner(settings)
+    test_runner = TestRunner(
+            verbosity=verbosity,
+            interactive=interactive,
+            failfast=False)
+    failures = test_runner.run_tests([])
+    sys.exit(bool(failures))
 
-class ThreadLocalsMiddleware(object):
-    """
-    Middleware that store current request in thread local storage.
-    This middleware should come at the top of the MIDDLEWARE_CLASSES list.
-    
-    """
-    def process_request(self, request):
-        # save current request instance
-        _thread_locals.request = request
+if __name__ == '__main__':
+    runtests()
 
-    def process_response(self, request, response):
-        # remove saved request instance
-        if hasattr(_thread_locals, 'request'):
-            delattr(_thread_locals, 'request')
-        return response

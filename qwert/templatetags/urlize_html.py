@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Author:        alisue
-# Date:            2010/12/18
-#
+# vim: set fileencoding=utf-8 :
 from django import template
 from django.conf import settings
 
@@ -18,7 +14,9 @@ def urlize_html(html):
         from django.utils.html import urlize
     except ImportError:
         if settings.DEBUG:
-            raise template.TemplateSyntaxError, "Error in urlize_html The Python BeautifulSoup libraries aren't installed."
+            raise template.TemplateSyntaxError(
+                    "Error in urlize_html The Python BeautifulSoup libraries aren't installed."
+                )
         return html
     else:
         soup = BeautifulSoup(html)

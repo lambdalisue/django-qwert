@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8 :
 """
-Middleware to store request instance during request
+Unittest module of ...
 
 
 AUTHOR:
@@ -29,32 +29,29 @@ License:
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
     IN THE SOFTWARE.
 
-"""
+"""   
 from __future__ import with_statement
-try:
-    from threading import local
-except ImportError:
-    from django.utils._threading_local import local
+from django.test import TestCase
 
-__all__ = ['get_request', 'ThreadLocalsMiddleware']
-_thread_locals = local()
+class EntryViewTestCase(TestCase):
+    fixtures = ['tests_miniblog_blogs_test.yaml']
 
-def get_request():
-    """Return stored request instance in current thread"""
-    return getattr(_thread_locals, 'request', None)
+    def test_list(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
 
-class ThreadLocalsMiddleware(object):
-    """
-    Middleware that store current request in thread local storage.
-    This middleware should come at the top of the MIDDLEWARE_CLASSES list.
-    
-    """
-    def process_request(self, request):
-        # save current request instance
-        _thread_locals.request = request
+    def test_detail(self):
+        response = self.client.get('/foo/')
+        self.assertEqual(response.status_code, 200)
 
-    def process_response(self, request, response):
-        # remove saved request instance
-        if hasattr(_thread_locals, 'request'):
-            delattr(_thread_locals, 'request')
-        return response
+    def test_create(self):
+        response = self.client.get('/create/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_update(self):
+        response = self.client.get('/update/1/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete(self):
+        response = self.client.get('/delete/1/')
+        self.assertEqual(response.status_code, 200)

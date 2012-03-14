@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8 :
 """
-Middleware to store request instance during request
+Mini blog URLconf
 
 
 AUTHOR:
@@ -29,32 +29,20 @@ License:
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
     IN THE SOFTWARE.
 
-"""
+"""   
 from __future__ import with_statement
-try:
-    from threading import local
-except ImportError:
-    from django.utils._threading_local import local
+from django.conf.urls.defaults import patterns, url
 
-__all__ = ['get_request', 'ThreadLocalsMiddleware']
-_thread_locals = local()
+import views
 
-def get_request():
-    """Return stored request instance in current thread"""
-    return getattr(_thread_locals, 'request', None)
-
-class ThreadLocalsMiddleware(object):
-    """
-    Middleware that store current request in thread local storage.
-    This middleware should come at the top of the MIDDLEWARE_CLASSES list.
-    
-    """
-    def process_request(self, request):
-        # save current request instance
-        _thread_locals.request = request
-
-    def process_response(self, request, response):
-        # remove saved request instance
-        if hasattr(_thread_locals, 'request'):
-            delattr(_thread_locals, 'request')
-        return response
+urlpatterns = patterns('',
+    url(r'^$', views.EntryListView.as_view(), name='blogs-entry-list'),
+    url(r'^create/$', views.EntryCreateView.as_view(), 
+        name='blogs-entry-create'),
+    url(r'^update/(?P<pk>\d+)/$', views.EntryUpdateView.as_view(), 
+        name='blogs-entry-update'),
+    url(r'^delete/(?P<pk>\d+)/$', views.EntryDeleteView.as_view(), 
+        name='blogs-entry-delete'),
+    url(r'^(?P<slug>[^/]+)/$', views.EntryDetailView.as_view(), 
+        name='blogs-entry-detail'),
+)

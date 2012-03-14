@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-#
-# Author:        alisue
-# Date:            2011/02/20
-#
+# vim: set fileencoding=utf-8 :
+# http://www.freewisdom.org/projects/python-markdown/Django
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
@@ -13,7 +10,7 @@ register = template.Library()
 
 @register.filter(name='markdown')
 @stringfilter
-def markdown(value, arg=''):
+def markdown_filter(value, arg=''):
     """
     Filter to create HTML out of Markdown, using custom extensions.
 
@@ -35,9 +32,10 @@ def markdown(value, arg=''):
         import markdown
     except ImportError:
         if settings.DEBUG:
-            raise (template.TemplateSyntaxError,
+            raise template.TemplateSyntaxError(
                    "Error in {% markdown %} filter: "
-                   + "The markdown library isn't installed.")
+                   "The markdown library isn't installed."
+                )
         else :
             from django.utils.html import escape, linebreaks
             return linebreaks(escape(value))

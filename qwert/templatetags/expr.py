@@ -1,10 +1,5 @@
-# -*- coding: utf-8 -*-
-#
-# Author:        alisue
-# Date:            2010/11/29
-#
+# vim: set fileencoding=utf-8 :
 # Ref: http://djangosnippets.org/snippets/9/
-#
 from django import template
 from django.utils.translation import gettext_lazy as _
 import re

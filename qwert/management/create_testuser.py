@@ -45,11 +45,11 @@ License:
 
 """
 from __future__ import with_statement
-from django.conf import settings
 from django.contrib.auth import models as auth_models
 from django.contrib.auth.models import User
 from django.contrib.auth.management import create_superuser
 from django.db.models.signals import post_syncdb
+from qwert.conf import settings
 
 import logging
 logger = logging.getLogger(__name__)

@@ -1,14 +1,6 @@
 # vim: set fileencoding=utf-8 :
 """
-Add extra templatetags to builtins.
-The following templatetags will be added
-
-``expr``
-    A template tags for calculating python expression in template.
-
-``truncateletters``
-    A template tags for letter truncating.
-    
+Configure
 
 
 AUTHOR:
@@ -39,17 +31,25 @@ License:
 
 """
 from __future__ import with_statement
-from django.template import add_to_builtins
-from qwert.conf import settings
+from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 
-def extra_builtins():
-    extras = (
-            'qwert.templatetags.expr',
-            'qwert.templatetags.truncateletters',
-        )
-    for extra in extras:
-        add_to_builtins(extra)
+def checkconf(name, msg):
+    """check django.conf.settings is proprely configured"""
+    if not hasattr(settings, name):
+        raise ImproperlyConfigured(msg)
 
-if settings.ENABLE_EXTRA_BUILTINS:
-    extra_builtins()
-            
+def setconf(name, default_value):
+    """set default value to django.conf.settings"""
+    value = getattr(settings, name, default_value)
+    setattr(settings, name, value)
+
+
+# qwert.management.create_testuser
+setconf('AUTO_CREATE_TESTUSER', settings.DEBUG)
+setconf('TESTUSER_USERNAME', 'admin')
+setconf('TESTUSER_EMAIL', '%s@test.com' % settings.TESTUSER_USERNAME)
+setconf('TESTUSER_PASSWORD', 'password')
+
+# qwert.management.extra_builtins
+setconf('ENABLE_EXTRA_BUILTINS', True)
